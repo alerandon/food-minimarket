@@ -1,0 +1,83 @@
+services:
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./packages:/app/packages
+      - /app/node_modules
+    networks:
+      - food_minimarket_network
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+          ignore:
+            - node_modules/
+            - build/
+        - action: rebuild
+          path: ./apps/web/package.json
+  api:
+    container_name: api
+    environment:
+      API_PORT: ${API_PORT}
+      API_DB_USER: ${API_DB_USER}
+      API_DB_PASSWORD: ${API_DB_PASSWORD}
+      API_DB_HOST: ${API_DB_HOST}
+      API_DB_PORT: ${API_DB_PORT}
+      API_DB_NAME: ${API_DB_NAME}
+      API_NODE_ENV: ${API_NODE_ENV}
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    restart: always
+    ports:
+      - ${API_PORT}:${API_PORT}
+    volumes:
+      - ./packages:/app/packages
+    networks:
+      - food_minimarket_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/api/src
+          target: /app/apps/api/src
+          ignore:
+            - node_modules/
+            - build/
+        - action: rebuild
+          path: ./apps/api/package.json
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '5432:5432'
+    networks:
+      - food_minimarket_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+networks:
+  food_minimarket_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

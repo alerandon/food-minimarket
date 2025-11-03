@@ -1,0 +1,21 @@
+{
+  "name": "food-minimarket",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alerandon/food-minimarket.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alerandon/food-minimarket/issues"
+  },
+  "homepage": "https://github.com/alerandon/food-minimarket#readme",
+  "description": ""
+}
