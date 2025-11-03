@@ -1,0 +1,5 @@
+export type TJwtPayload = {
+  id: string;
+  email: string;
+  type: 'auth';
+};
