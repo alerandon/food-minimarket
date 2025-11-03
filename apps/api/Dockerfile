@@ -4,12 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
-COPY packages/types/package*.json ./packages/types/
+# COPY packages/types/package*.json ./packages/types/
 
 RUN npm install
 
 COPY apps/api ./apps/api
-COPY packages/types ./packages/types
+# COPY packages/types ./packages/types
 
 WORKDIR /app/apps/api
 
