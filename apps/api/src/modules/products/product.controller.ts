@@ -13,6 +13,7 @@ import { EntityNotFoundError } from 'typeorm';
 import { ProductsService } from './product.service';
 import { FindOneDocs, CreateDocs } from './docs';
 import { CreateProductDto } from './dto/create-product.dto';
+import { checkIfEntityNotFound } from 'src/utils/error';
 
 @Swagger.ApiTags('Products')
 @Swagger.ApiBearerAuth()
@@ -33,9 +34,7 @@ export class ProductsController {
       const response = { data: product };
       return response;
     } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new NotFoundException(`Product with ID ${id} not found.`);
-      }
+      checkIfEntityNotFound({ error, id, entityName: 'Product' });
       throw error;
     }
   }

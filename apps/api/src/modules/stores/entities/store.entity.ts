@@ -5,8 +5,9 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
-import { Product } from '../../products/entities/product.entity';
+import { Product } from 'src/modules/products/entities/product.entity';
 
 @Entity('stores')
 export class Store {
@@ -25,14 +26,14 @@ export class Store {
   @Column({ type: 'varchar', length: 20 })
   phone: string;
 
-  @Column({ type: 'boolean', default: true })
-  isActive: boolean;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @OneToMany(() => Product, (product) => product.store)
   products: Product[];
