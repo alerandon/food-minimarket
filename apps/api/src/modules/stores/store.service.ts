@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Store } from './entities/store.entity';
@@ -13,14 +13,14 @@ import { Product } from '../products/entities/product.entity';
 interface FindManyParams {
   pageNumber?: number;
   pageLimit?: number;
-  filterByName?: string;
+  q?: string;
 }
 
 interface FindProductsParams {
   storeId: string;
   pageNumber?: number;
   pageLimit?: number;
-  filterByName?: string;
+  q?: string;
   inStock?: boolean;
 }
 
@@ -36,12 +36,12 @@ export class StoresService {
   async findMany({
     pageNumber = 1,
     pageLimit = PAGINATE_DEFAULT_LIMIT,
-    filterByName,
+    q,
   }: FindManyParams): Promise<PaginatedResult<Store>> {
     const queryBuilder = this.storeRepository.createQueryBuilder('store');
-    if (filterByName) {
+    if (q) {
       queryBuilder.where('store.name ILIKE :name', {
-        name: `%${filterByName}%`,
+        name: `%${q}%`,
       });
     }
 
@@ -97,17 +97,17 @@ export class StoresService {
     storeId,
     pageNumber = 1,
     pageLimit = PAGINATE_DEFAULT_LIMIT,
-    filterByName,
-    inStock = true,
+    q,
+    inStock,
   }: FindProductsParams): Promise<PaginatedResult<Product>> {
     const queryBuilder = this.storeRepository
       .createQueryBuilder('store')
       .leftJoinAndSelect('store.products', 'product')
       .where('store.id = :storeId', { storeId });
 
-    if (filterByName) {
+    if (q) {
       queryBuilder.andWhere('product.name ILIKE :name', {
-        name: `%${filterByName}%`,
+        name: `%${q}%`,
       });
     }
     if (inStock) {

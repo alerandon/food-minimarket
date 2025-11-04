@@ -1,5 +1,6 @@
 import * as TypeORM from 'typeorm';
 import * as argon2 from 'argon2';
+import { MAX_PASSWORD_LENGTH } from 'src/constants';
 
 @TypeORM.Entity('users')
 export class User {
@@ -9,7 +10,7 @@ export class User {
   @TypeORM.Column({ unique: true })
   email: string;
 
-  @TypeORM.Column({ type: 'varchar' })
+  @TypeORM.Column({ type: 'varchar', length: MAX_PASSWORD_LENGTH })
   password: string;
 
   @TypeORM.CreateDateColumn()

@@ -37,14 +37,14 @@ export class StoresController {
   async findMany(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
-    @Query('filterByName') filterByName?: string,
+    @Query('q') q?: string,
   ) {
     const pageNumber = page ? parseInt(page) : undefined;
     const pageLimit = limit ? parseInt(limit) : undefined;
     const stores = await this.storesService.findMany({
       pageNumber,
       pageLimit,
-      filterByName,
+      q,
     });
     const response = { data: stores };
     return response;
@@ -123,7 +123,7 @@ export class StoresController {
     @Param('id') id: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
-    @Query('filterByName') filterByName?: string,
+    @Query('q') q?: string,
     @Query('inStock', ParseBoolPipe) inStock?: boolean,
   ) {
     try {
@@ -133,7 +133,7 @@ export class StoresController {
         storeId: id,
         pageNumber,
         pageLimit,
-        filterByName,
+        q,
         inStock,
       });
       const response = { data: products };
