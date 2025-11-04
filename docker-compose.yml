@@ -1,36 +1,37 @@
 services:
-  web:
-    container_name: web
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-    restart: always
-    ports:
-      - 3000:3000
-    volumes:
-      - ./packages:/app/packages
-      - /app/node_modules
-    networks:
-      - food_minimarket_network
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/web/src
-          target: /app/apps/web/src
-          ignore:
-            - node_modules/
-            - build/
-        - action: rebuild
-          path: ./apps/web/package.json
+  # web:
+  #   container_name: web
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/web/Dockerfile
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./packages:/app/packages
+  #     - /app/node_modules
+  #   networks:
+  #     - food_minimarket_network
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: ./apps/web/src
+  #         target: /app/apps/web/src
+  #         ignore:
+  #           - node_modules/
+  #           - build/
+  #       - action: rebuild
+  #         path: ./apps/web/package.json
   api:
     container_name: api
     environment:
       API_PORT: ${API_PORT}
-      API_DB_USER: ${API_DB_USER}
+      API_DB_USERNAME: ${API_DB_USERNAME}
       API_DB_PASSWORD: ${API_DB_PASSWORD}
+      API_JWT_SECRET: ${API_JWT_SECRET}
+      API_DB_DATABASE: ${API_DB_DATABASE}
       API_DB_HOST: ${API_DB_HOST}
       API_DB_PORT: ${API_DB_PORT}
-      API_DB_NAME: ${API_DB_NAME}
       API_NODE_ENV: ${API_NODE_ENV}
     build:
       context: .
@@ -56,12 +57,12 @@ services:
         - action: rebuild
           path: ./apps/api/package.json
   postgres:
-    image: postgres:latest
+    image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${API_DB_DATABASE}
+      POSTGRES_USER: ${API_DB_USERNAME}
+      POSTGRES_PASSWORD: ${API_DB_PASSWORD}
     ports:
       - '5432:5432'
     networks:
