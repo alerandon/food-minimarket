@@ -1,27 +1,27 @@
 services:
-  # web:
-  #   container_name: web
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/web/Dockerfile
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./packages:/app/packages
-  #     - /app/node_modules
-  #   networks:
-  #     - food_minimarket_network
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: ./apps/web/src
-  #         target: /app/apps/web/src
-  #         ignore:
-  #           - node_modules/
-  #           - build/
-  #       - action: rebuild
-  #         path: ./apps/web/package.json
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./packages:/app/packages
+      - /app/node_modules
+    networks:
+      - food_minimarket_network
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+          ignore:
+            - node_modules/
+            - build/
+        - action: rebuild
+          path: ./apps/web/package.json
   api:
     container_name: api
     environment:
