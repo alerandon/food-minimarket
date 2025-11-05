@@ -1,32 +1,32 @@
-import * as TypeORM from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import * as argon2 from 'argon2';
-import { MAX_PASSWORD_LENGTH } from 'src/constants';
+import { MAX_PASSWORD_LENGTH } from '../../../constants';
 
-@TypeORM.Entity('users')
+@Entity('users')
 export class User {
-  @TypeORM.PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @TypeORM.Column({ unique: true })
+  @Column({ unique: true })
   email: string;
 
-  @TypeORM.Column({ type: 'varchar', length: MAX_PASSWORD_LENGTH })
+  @Column({ type: 'varchar', length: MAX_PASSWORD_LENGTH })
   password: string;
 
-  @TypeORM.CreateDateColumn()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @TypeORM.UpdateDateColumn()
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @TypeORM.BeforeInsert()
+  @BeforeInsert()
   async hashPasswordBeforeInsert() {
     if (this.password) {
       this.password = await argon2.hash(this.password);
     }
   }
 
-  @TypeORM.BeforeUpdate()
+  @BeforeUpdate()
   async hashPasswordBeforeUpdate() {
     if (this.password && !this.password.startsWith('$argon2')) {
       this.password = await argon2.hash(this.password);

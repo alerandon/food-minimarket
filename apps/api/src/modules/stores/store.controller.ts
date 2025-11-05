@@ -9,6 +9,7 @@ import {
   Delete,
   Body,
   ParseBoolPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { StoresService } from './store.service';
 import {
@@ -24,9 +25,9 @@ import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { CreateStoreProductDto } from './dto/create-store-product.dto';
 import { UpdateStoreProductDto } from './dto/update-store-product.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Swagger.ApiTags('Stores')
-@Swagger.ApiBearerAuth()
 @Controller('stores')
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
@@ -34,6 +35,9 @@ export class StoresController {
   @Get()
   @Swagger.ApiOperation(FindManyDocs.apiOperation)
   @Swagger.ApiResponse(FindManyDocs.apiResponseStatus200)
+  @Swagger.ApiQuery({ name: 'page', required: false, type: Number, description: 'Page response (optional)' })
+  @Swagger.ApiQuery({ name: 'limit', required: false, type: Number, description: 'Limit per page (optional)' })
+  @Swagger.ApiQuery({ name: 'q', required: false, type: String, description: 'Search text by name (optional)' })
   async findMany(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -68,6 +72,8 @@ export class StoresController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(CreateDocs.apiOperation)
   @Swagger.ApiResponse(CreateDocs.apiResponseStatus201)
   @Swagger.ApiResponse(CreateDocs.apiResponseStatus400)
@@ -78,6 +84,8 @@ export class StoresController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(UpdateDocs.apiOperation)
   @Swagger.ApiParam(UpdateDocs.apiParam)
   @Swagger.ApiResponse(UpdateDocs.apiResponseStatus200)
@@ -94,6 +102,8 @@ export class StoresController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(DeleteDocs.apiOperation)
   @Swagger.ApiParam(DeleteDocs.apiParam)
   @Swagger.ApiResponse(DeleteDocs.apiResponseStatus200)
@@ -117,6 +127,10 @@ export class StoresController {
   @Get(':id/products')
   @Swagger.ApiOperation(StoreProductsDocs.findProducts.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.findProducts.apiParam)
+  @Swagger.ApiQuery({ name: 'page', required: false, type: Number, description: 'Page response (optional)' })
+  @Swagger.ApiQuery({ name: 'limit', required: false, type: Number, description: 'Limit per page (optional)' })
+  @Swagger.ApiQuery({ name: 'q', required: false, type: String, description: 'Search text by name (optional)' })
+  @Swagger.ApiQuery({ name: 'inStock', required: false, type: Boolean, description: 'Filter by stock status (optional)' })
   @Swagger.ApiResponse(StoreProductsDocs.findProducts.apiResponseStatus200)
   @Swagger.ApiResponse(StoreProductsDocs.findProducts.apiResponseStatus404)
   async findProducts(
@@ -145,6 +159,8 @@ export class StoresController {
   }
 
   @Post(':id/products')
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(StoreProductsDocs.createProduct.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.createProduct.apiParam)
   @Swagger.ApiResponse(StoreProductsDocs.createProduct.apiResponseStatus201)
@@ -167,6 +183,8 @@ export class StoresController {
   }
 
   @Put(':id/products/:productId')
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(StoreProductsDocs.updateProduct.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.updateProduct.apiParams[0])
   @Swagger.ApiParam(StoreProductsDocs.updateProduct.apiParams[1])
@@ -192,6 +210,8 @@ export class StoresController {
   }
 
   @Delete(':id/products/:productId')
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(StoreProductsDocs.deleteProduct.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.deleteProduct.apiParams[0])
   @Swagger.ApiParam(StoreProductsDocs.deleteProduct.apiParams[1])

@@ -1,8 +1,4 @@
 import { registerAs } from '@nestjs/config';
-import AppDataSource = require('./data-source.cjs');
+import DataSource from './data-source';
 
-export default registerAs('database', () => ({
-  ...AppDataSource.options,
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/migrations/*{.ts,.js}'],
-}));
+export default registerAs('database', () => (DataSource.options));

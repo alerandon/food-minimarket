@@ -16,13 +16,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { checkIfEntityNotFound } from 'src/utils/error';
 
 @Swagger.ApiTags('Products')
-@Swagger.ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get(':id')
-  @UseGuards(AuthGuard('auth-jwt'))
   @Swagger.ApiOperation(FindOneDocs.apiOperation)
   @Swagger.ApiParam(FindOneDocs.apiParam)
   @Swagger.ApiResponse(FindOneDocs.apiResponseStatus200)
@@ -40,6 +38,8 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('auth-jwt'))
+  @Swagger.ApiBearerAuth()
   @Swagger.ApiBody(CreateDocs.apiBody)
   @Swagger.ApiOperation(CreateDocs.apiOperation)
   @Swagger.ApiResponse(CreateDocs.apiResponseStatus201)

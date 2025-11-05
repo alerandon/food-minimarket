@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { usersData } from './data/users';
 import { storesData } from './data/stores';
 import { productsData } from './data/products';
-import { User } from '../modules/users/user.entity';
+import { User } from '../modules/users/entities/user.entity';
 import { Store } from '../modules/stores/entities/store.entity';
 import { Product } from '../modules/products/entities/product.entity';
 

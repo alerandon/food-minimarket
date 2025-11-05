@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SeedService } from './seed.service';
-import { User } from '../modules/users/user.entity';
+import { User } from '../modules/users/entities/user.entity';
 import databaseConfig from '../config/database';
 import { Product } from 'src/modules/products/entities/product.entity';
 import { Store } from 'src/modules/stores/entities/store.entity';

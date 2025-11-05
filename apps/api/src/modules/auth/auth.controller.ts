@@ -2,7 +2,7 @@ import * as Swagger from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 import { LoginDto } from './dto';
 import { LoginDocs } from './docs';
 
