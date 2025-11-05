@@ -13,7 +13,7 @@ import { EntityNotFoundError } from 'typeorm';
 import { ProductsService } from './product.service';
 import { FindOneDocs, CreateDocs } from './docs';
 import { CreateProductDto } from './dto/create-product.dto';
-import { checkIfEntityNotFound } from 'src/utils/error';
+import { checkIfEntityNotFound } from '../../utils/error';
 
 @Swagger.ApiTags('Products')
 @Controller('products')

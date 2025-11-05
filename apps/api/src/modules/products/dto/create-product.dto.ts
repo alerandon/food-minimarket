@@ -10,13 +10,24 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
+  @ApiProperty({
+    description: 'Product name',
+    example: 'Saco 5 kgs de naranja',
+    format: 'string',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
   name: string;
 
+  @ApiProperty({
+    description: 'Product description',
+    example: 'Saco grande de naranjas frescas al mayor',
+    format: 'string',
+  })
   @IsString()
   @IsNotEmpty()
   description: string;

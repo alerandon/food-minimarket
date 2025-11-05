@@ -20,7 +20,7 @@ import {
   DeleteDocs,
   StoreProductsDocs,
 } from './docs';
-import { checkIfEntityNotFound } from 'src/utils/error';
+import { checkIfEntityNotFound } from '../../utils/error';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { CreateStoreProductDto } from './dto/create-store-product.dto';

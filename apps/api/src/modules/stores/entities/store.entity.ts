@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { Product } from 'src/modules/products/entities/product.entity';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity('stores')
 export class Store {

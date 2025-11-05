@@ -2,9 +2,9 @@ import { DataSource } from 'typeorm';
 import { User } from '../modules/users/entities/user.entity';
 import { Store } from '../modules/stores/entities/store.entity';
 import { Product } from '../modules/products/entities/product.entity';
-import { createUsersTable1762298400367 } from 'src/migrations/1762298400367-create-users-table';
-import { createProductsTable1762298472187 } from 'src/migrations/1762298472187-create-products-table';
-import { createStoresTable1762298469927 } from 'src/migrations/1762298469927-create-stores-table';
+import { createUsersTable1762298400367 } from '../migrations/1762298400367-create-users-table';
+import { createProductsTable1762298472187 } from '../migrations/1762298472187-create-products-table';
+import { createStoresTable1762298469927 } from '../migrations/1762298469927-create-stores-table';
 
 const {
   API_DB_HOST = 'postgres',
