@@ -21,20 +21,36 @@ export class ApiService {
   }
 
   private static async handleResponse<T>(response: Response): Promise<T> {
+    console.log("Response status:", response.status);
+    console.log("Response ok:", response.ok);
+    console.log("Response URL:", response.url);
+
     if (!response.ok) {
       let errorData: ApiError;
       try {
         errorData = await response.json();
       } catch {
         errorData = {
-          message: "Error al procesar la solicitud",
+          message: `Error ${response.status}: ${response.statusText}`,
           statusCode: response.status,
+          error: response.statusText,
         };
       }
+
+      // Log del error para debugging
+      console.error("API Error:", {
+        url: response.url,
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData,
+      });
+
       throw errorData;
     }
 
-    return response.json();
+    const jsonData = await response.json();
+    console.log("JSON parseado:", jsonData);
+    return jsonData;
   }
 
   static async get<T>(endpoint: string): Promise<T> {

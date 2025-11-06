@@ -3,10 +3,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { storesService } from "@/services/stores.service";
 
-export function useStoreProducts(storeId: string) {
+interface UseStoreProductsParams {
+  page?: number;
+  limit?: number;
+}
+
+export function useStoreProducts(
+  storeId: string,
+  params?: UseStoreProductsParams
+) {
   return useQuery({
-    queryKey: ["store-products", storeId],
-    queryFn: () => storesService.getStoreProducts(storeId),
+    queryKey: ["store-products", storeId, params?.page, params?.limit],
+    queryFn: () => storesService.getStoreProducts(storeId, params),
     enabled: !!storeId,
   });
 }

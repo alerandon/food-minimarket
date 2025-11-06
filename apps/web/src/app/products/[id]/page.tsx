@@ -76,9 +76,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <h1 className="text-4xl font-bold text-destructive">
             Error al cargar el producto
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             {apiError.message || "Ocurrió un error inesperado"}
           </p>
+          {apiError.statusCode && (
+            <p className="text-sm text-muted-foreground">
+              Código de error: {apiError.statusCode}
+            </p>
+          )}
+          {apiError.error && (
+            <p className="text-xs text-muted-foreground font-mono">
+              {apiError.error}
+            </p>
+          )}
           <Link href="/stores">
             <Button className="gap-2">
               <ArrowLeft className="h-4 w-4" />
@@ -120,46 +130,47 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 px-4 md:px-6 py-4 md:py-6">
         <Link href={store ? `/stores/${store.id}` : "/stores"}>
-          <Button className="gap-2">
+          <Button className="gap-2" size="sm">
             <ArrowLeft className="h-4 w-4" />
-            Volver a {store?.name || "Tiendas"}
+            <span className="hidden sm:inline">Volver a {store?.name || "Tiendas"}</span>
+            <span className="sm:hidden">Volver</span>
           </Button>
         </Link>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Product Image Placeholder */}
-          <Card>
+          <Card className="w-full max-w-md mx-auto md:max-w-none">
             <CardContent className="p-0">
-              <div className="aspect-square bg-muted flex items-center justify-center rounded-lg">
-                <Package className="h-24 w-24 text-muted-foreground" />
+              <div className="aspect-square w-full bg-muted flex items-center justify-center rounded-lg overflow-hidden">
+                <Package className="h-20 w-20 md:h-24 md:w-24 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <div>
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <h1 className="text-3xl font-bold">{product.name}</h1>
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <h1 className="text-2xl md:text-3xl font-bold leading-tight">{product.name}</h1>
                 {product.isAvailable ? (
-                  <Badge className="bg-success/10 text-success border-success/20 flex-shrink-0">
+                  <Badge className="bg-success/10 text-success border-success/20 flex-shrink-0 text-xs md:text-sm">
                     En Stock
                   </Badge>
                 ) : (
-                  <Badge className="bg-destructive/10 text-destructive border-destructive/20 flex-shrink-0">
+                  <Badge className="bg-destructive/10 text-destructive border-destructive/20 flex-shrink-0 text-xs md:text-sm">
                     Agotado
                   </Badge>
                 )}
               </div>
 
-              <p className="text-4xl font-bold text-primary mb-2">
+              <p className="text-3xl md:text-4xl font-bold text-primary mb-2">
                 S/ {parseFloat(product.price).toFixed(2)}
               </p>
 
               {product.description && (
-                <p className="text-muted-foreground text-lg">
+                <p className="text-muted-foreground text-base md:text-lg">
                   {product.description}
                 </p>
               )}
@@ -167,7 +178,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             <Separator />
 
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div className="flex items-center gap-3">
                 {product.isAvailable ? (
                   <>

@@ -10,15 +10,12 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useStore } from "@/hooks/useStore";
 import { useStoreProducts } from "@/hooks/useStoreProducts";
 import { ApiError } from "@/lib/api-types";
-
-const PRODUCTS_PER_PAGE = 6;
 
 interface StoreDetailClientProps {
   id: string;
@@ -38,7 +35,7 @@ export default function StoreDetailClient({
     data: allProducts,
     isLoading: isLoadingProducts,
     error: productsError,
-  } = useStoreProducts(id);
+  } = useStoreProducts(id, { page: currentPage });
 
   const isLoading = isLoadingStore || isLoadingProducts;
   const error = storeError || productsError;
@@ -51,9 +48,19 @@ export default function StoreDetailClient({
           <h1 className="text-4xl font-bold text-destructive">
             Error al cargar la tienda
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             {apiError.message || "Ocurrió un error inesperado"}
           </p>
+          {apiError.statusCode && (
+            <p className="text-sm text-muted-foreground">
+              Código de error: {apiError.statusCode}
+            </p>
+          )}
+          {apiError.error && (
+            <p className="text-xs text-muted-foreground font-mono">
+              {apiError.error}
+            </p>
+          )}
           <Link href="/stores">
             <Button className="gap-2">
               <ArrowLeft className="h-4 w-4" />
@@ -94,17 +101,17 @@ export default function StoreDetailClient({
     );
   }
 
-  const filteredProducts = (allProducts || []).filter((product) => {
+  // Usar los datos paginados que vienen del backend
+  const products = allProducts?.items || [];
+  const hasPrevPage = allProducts?.hasPrev || false;
+  const hasNextPage = allProducts?.hasNext || false;
+  const totalItems = allProducts?.totalItems || 0;
+
+  // Filtrar solo por disponibilidad si es necesario
+  const filteredProducts = products.filter((product) => {
     if (showOnlyInStock && !product.isAvailable) return false;
     return true;
   });
-
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + PRODUCTS_PER_PAGE
-  );
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -113,58 +120,52 @@ export default function StoreDetailClient({
   };
 
   return (
-    <div className="container py-8">
-      <div className="space-y-6">
+    <div className="container px-4 py-6 md:py-8">
+      <div className="space-y-4 md:space-y-6">
         <Link href="/stores">
-          <Button className="gap-2">
+          <Button className="gap-2" size="sm">
             <ArrowLeft className="h-4 w-4" />
-            Volver a Tiendas
+            <span className="hidden sm:inline">Volver a Tiendas</span>
+            <span className="sm:hidden">Volver</span>
           </Button>
         </Link>
 
         <StoreHeader store={store} />
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">
+        <div className="space-y-4 md:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <h2 className="text-xl md:text-2xl font-bold">
               Productos ({filteredProducts.length})
             </h2>
             <ProductFilters showOnlyInStock={showOnlyInStock} />
           </div>
 
-          <ProductGrid products={paginatedProducts} />
+          <ProductGrid products={filteredProducts} />
 
-          {totalPages > 1 && (
-            <div className="flex justify-center pt-4">
+          {totalItems > 0 && (hasPrevPage || hasNextPage) && (
+            <div className="flex justify-center pt-6 md:pt-8 pb-4">
               <Pagination>
-                <PaginationContent>
+                <PaginationContent className="gap-1 md:gap-2">
                   <PaginationItem>
                     <PaginationPrevious
                       href={createPageURL(currentPage - 1)}
                       className={`${
-                        currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                        !hasPrevPage ? "pointer-events-none opacity-50" : ""
                       }`}
                     />
                   </PaginationItem>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <PaginationItem key={page}>
-                        <PaginationLink
-                          href={createPageURL(page)}
-                          isActive={currentPage === page}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )
-                  )}
+                  <PaginationItem>
+                    <span className="px-2 md:px-4 py-2 text-sm md:text-base">
+                      Página {currentPage} - {totalItems} productos
+                    </span>
+                  </PaginationItem>
 
                   <PaginationItem>
                     <PaginationNext
                       href={createPageURL(currentPage + 1)}
                       className={`${
-                        currentPage === totalPages
+                        !hasNextPage
                           ? "pointer-events-none opacity-50"
                           : ""
                       }`}

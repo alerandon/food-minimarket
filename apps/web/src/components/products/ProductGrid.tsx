@@ -8,14 +8,14 @@ interface ProductGridProps {
 const ProductGrid = ({ products }: ProductGridProps) => {
   if (products.length === 0) {
     return (
-      <div className="text-center py-16">
-        <p className="text-muted-foreground text-lg">No se encontraron productos</p>
+      <div className="text-center py-12 md:py-16 px-4">
+        <p className="text-muted-foreground text-base md:text-lg">No se encontraron productos</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

@@ -8,10 +8,11 @@ import {
 export const authService = {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await ApiService.post<ApiResponse<LoginResponse>>(
-      "/auth/login",
+      "/api/auth/login",
       credentials
     );
 
+    // Guardar el token automáticamente
     if (response.data.access_token) {
       ApiService.setAuthToken(response.data.access_token);
     }

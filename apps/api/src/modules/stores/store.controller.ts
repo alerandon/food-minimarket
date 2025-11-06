@@ -8,7 +8,6 @@ import {
   Put,
   Delete,
   Body,
-  ParseBoolPipe,
   UseGuards,
 } from '@nestjs/common';
 import { StoresService } from './store.service';
@@ -138,17 +137,18 @@ export class StoresController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('q') q?: string,
-    @Query('inStock', ParseBoolPipe) inStock?: boolean,
+    @Query('inStock') inStock?: string,
   ) {
     try {
       const pageNumber = page ? parseInt(page) : undefined;
       const pageLimit = limit ? parseInt(limit) : undefined;
+      const inStockBoolean = inStock !== undefined ? inStock === 'true' : undefined;
       const products = await this.storesService.findProducts({
         storeId: id,
         pageNumber,
         pageLimit,
         q,
-        inStock,
+        inStock: inStockBoolean,
       });
       const response = { data: products };
       return response;

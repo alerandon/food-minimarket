@@ -14,7 +14,7 @@ export class ProductsService {
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOneOrFail({
       where: { id },
-      relations: ['stores'],
+      relations: ['store'],
     });
 
     return product;

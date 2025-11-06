@@ -3,9 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { storesService } from "@/services/stores.service";
 
-export function useStores() {
+interface UseStoresParams {
+  page?: number;
+  limit?: number;
+}
+
+export function useStores(params?: UseStoresParams) {
   return useQuery({
-    queryKey: ["stores"],
-    queryFn: () => storesService.getStores(),
+    queryKey: ["stores", params?.page, params?.limit],
+    queryFn: () => storesService.getStores(params),
   });
 }
