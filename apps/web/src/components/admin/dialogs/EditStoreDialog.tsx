@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { StoreForm } from "@/components/admin/StoreForm";
+import { StoreForm } from "@/components/admin/forms/StoreForm";
 import { Store } from "@/lib/types";
 import { StoreFormData } from "@/lib/schemas";
 

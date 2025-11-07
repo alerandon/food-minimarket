@@ -12,9 +12,9 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
-import { ProductListSkeleton } from "@/components/admin/ProductListSkeleton";
-import { ProductCard } from "@/components/admin/ProductCard";
+import { AdminBreadcrumbs } from "@/components/admin/navigation/AdminBreadcrumbs";
+import { ProductListSkeleton } from "@/components/admin/skeletons/ProductListSkeleton";
+import { ProductCard } from "@/components/admin/cards/ProductCard";
 import {
   CreateProductDialog,
   EditProductDialog,

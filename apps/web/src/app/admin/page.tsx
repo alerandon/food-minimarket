@@ -10,9 +10,9 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
-import { StoreListSkeleton } from "@/components/admin/StoreListSkeleton";
-import { StoreCard } from "@/components/admin/StoreCard";
+import { AdminBreadcrumbs } from "@/components/admin/navigation/AdminBreadcrumbs";
+import { StoreListSkeleton } from "@/components/admin/skeletons/StoreListSkeleton";
+import { StoreCard } from "@/components/admin/cards/StoreCard";
 import {
   CreateStoreDialog,
   EditStoreDialog,
