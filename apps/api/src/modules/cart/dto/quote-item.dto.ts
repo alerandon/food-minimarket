@@ -1,4 +1,5 @@
 import { IsUUID, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class QuoteItemDto {
@@ -14,6 +15,7 @@ export class QuoteItemDto {
     example: 2,
     minimum: 1,
   })
+  @Type(() => Number)
   @IsInt({ message: 'La cantidad debe ser un número entero' })
   @Min(1, { message: 'La cantidad debe ser al menos 1' })
   quantity: number;

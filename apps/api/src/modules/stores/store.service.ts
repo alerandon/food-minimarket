@@ -99,7 +99,7 @@ export class StoresService {
     pageNumber = 1,
     pageLimit = PAGINATE_DEFAULT_LIMIT,
     q,
-    inStock = false,
+    inStock,
   }: FindProductsParams): Promise<PaginatedResult<Product>> {
     const queryBuilder = this.productRepository
       .createQueryBuilder('product')
@@ -108,8 +108,9 @@ export class StoresService {
     if (q) {
       applyFuzzySearchAnd(queryBuilder, q, 'product.name');
     }
-    if (!!inStock) {
-      queryBuilder.andWhere('product.stock > 0 AND product.isAvailable = :inStock', { inStock });
+
+    if (inStock !== undefined) {
+      queryBuilder.andWhere('product.isAvailable = :inStock', { inStock });
     }
 
     const skipNumber = (pageNumber - 1) * pageLimit;

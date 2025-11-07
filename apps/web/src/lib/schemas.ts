@@ -54,7 +54,7 @@ export const productFormSchema = z.object({
     .optional()
     .or(z.literal("")),
   price: z
-    .number({ invalid_type_error: "El precio debe ser un número" })
+    .number({ message: "El precio debe ser un número" })
     .positive({ message: "El precio debe ser mayor a 0" })
     .max(999999.99, { message: "El precio es demasiado alto" }),
   sku: z
@@ -64,7 +64,7 @@ export const productFormSchema = z.object({
     .max(50, { message: "El SKU debe tener menos de 50 caracteres" })
     .regex(/^[A-Z0-9-]+$/, { message: "El SKU solo puede contener letras mayúsculas, números y guiones" }),
   stock: z
-    .number({ invalid_type_error: "El stock debe ser un número" })
+    .number({ message: "El stock debe ser un número" })
     .int({ message: "El stock debe ser un número entero" })
     .nonnegative({ message: "El stock no puede ser negativo" })
     .max(999999, { message: "El stock es demasiado alto" }),

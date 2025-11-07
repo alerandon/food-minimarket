@@ -40,6 +40,13 @@ export class ApiService {
         error: errorData,
       });
 
+      if (response.status === 401) {
+        this.removeAuthToken();
+        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+          window.location.href = "/login";
+        }
+      }
+
       throw errorData;
     }
 

@@ -41,7 +41,7 @@ export interface CreateProductDto {
   price: number;
   sku: string;
   stock: number;
-  isAvailable?: boolean;
+  isAvailable: boolean;
   storeId: string;
 }
 

@@ -24,6 +24,8 @@ import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { CreateStoreProductDto } from './dto/create-store-product.dto';
 import { UpdateStoreProductDto } from './dto/update-store-product.dto';
+import { FindStoresQueryDto } from './dto/find-stores-query.dto';
+import { FindStoreProductsQueryDto } from './dto/find-store-products-query.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Swagger.ApiTags('Stores')
@@ -37,17 +39,11 @@ export class StoresController {
   @Swagger.ApiQuery(FindManyDocs.apiQueries[0])
   @Swagger.ApiQuery(FindManyDocs.apiQueries[1])
   @Swagger.ApiQuery(FindManyDocs.apiQueries[2])
-  async findMany(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('q') q?: string,
-  ) {
-    const pageNumber = page ? parseInt(page) : undefined;
-    const pageLimit = limit ? parseInt(limit) : undefined;
+  async findMany(@Query() query: FindStoresQueryDto) {
     const stores = await this.storesService.findMany({
-      pageNumber,
-      pageLimit,
-      q,
+      pageNumber: query.page,
+      pageLimit: query.limit,
+      q: query.q,
     });
     const response = { data: stores };
     return response;
@@ -131,21 +127,15 @@ export class StoresController {
   @Swagger.ApiResponse(StoreProductsDocs.findProducts.apiResponseStatus404)
   async findProducts(
     @Param('id') id: string,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('q') q?: string,
-    @Query('inStock') inStock?: string,
+    @Query() query: FindStoreProductsQueryDto,
   ) {
     try {
-      const pageNumber = page ? parseInt(page) : undefined;
-      const pageLimit = limit ? parseInt(limit) : undefined;
-      const inStockBoolean = inStock !== undefined ? inStock === 'true' : undefined;
       const products = await this.storesService.findProducts({
         storeId: id,
-        pageNumber,
-        pageLimit,
-        q,
-        inStock: inStockBoolean,
+        pageNumber: query.page,
+        pageLimit: query.limit,
+        q: query.q,
+        inStock: query.inStock,
       });
       const response = { data: products };
       return response;
