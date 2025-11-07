@@ -1,7 +1,7 @@
 import StoresPageClient from "@/components/stores/StoresPageClient";
 
 interface StoresPageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }
 
 export default async function StoresPage({ searchParams }: StoresPageProps) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use } from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -12,9 +12,6 @@ import {
   Store as StoreIcon,
   MapPin,
   AlertCircle,
-  ShoppingCart,
-  Minus,
-  Plus,
   Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,14 +19,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useProduct } from "@/hooks/useProduct";
-import { useStore } from "@/hooks/useStore";
-import { useCart } from "@/contexts/CartContext";
-import { toast } from "@/components/ui/use-toast";
+import { useStore } from "@/hooks/stores/useStore";
 import { ApiError } from "@/lib/api-types";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
   const { id } = use(params);
 
   const { data: product, isLoading: isLoadingProduct, error: productError } = useProduct(id);
@@ -37,36 +30,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   const isLoading = isLoadingProduct || isLoadingStore;
   const error = productError;
-
-  const decrementQuantity = () => {
-    if (quantity <= 1) return;
-    setQuantity(quantity - 1);
-  };
-
-  const incrementQuantity = () => {
-    if (!product || quantity >= product.stock) return;
-    setQuantity(quantity + 1);
-  };
-
-  const handleAddToCart = () => {
-    if (!product) return;
-
-    if (!product.isAvailable) {
-      toast({
-        title: "Producto no disponible",
-        description: "Este producto está agotado",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    addToCart(product, quantity);
-    toast({
-      title: "Agregado al carrito",
-      description: `${quantity} ${quantity === 1 ? 'unidad' : 'unidades'} de ${product.name}`,
-    });
-    setQuantity(1);
-  };
 
   if (error) {
     const apiError = error as unknown as ApiError;
@@ -219,46 +182,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             <Separator />
-
-            {product.isAvailable && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <span className="font-medium">Cantidad:</span>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      className="h-8 w-8"
-                      onClick={decrementQuantity}
-                      disabled={quantity <= 1}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-
-                    <span className="w-12 text-center font-medium text-lg">
-                      {quantity}
-                    </span>
-
-                    <Button
-                      className="h-8 w-8"
-                      onClick={incrementQuantity}
-                      disabled={quantity >= product.stock}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <span className="text-sm text-muted-foreground">
-                    (máx: {product.stock})
-                  </span>
-                </div>
-
-                <Button
-                  className="w-full gap-2 h-12 text-lg"
-                  onClick={handleAddToCart}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Agregar al carrito
-                </Button>
-              </div>
-            )}
 
             <Separator />
 

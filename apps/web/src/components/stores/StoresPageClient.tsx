@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import StoreSearch from "@/components/stores/StoreSearch";
 import StoreGrid from "@/components/stores/StoreGrid";
-import { useStores } from "@/hooks/useStores";
+import { useStores } from "@/hooks/stores/useStores";
 import { ApiError } from "@/lib/api-types";
 import { Loader2 } from "lucide-react";
 import {
@@ -23,7 +23,11 @@ export default function StoresPageClient({
   currentPage,
   searchParams,
 }: StoresPageClientProps) {
-  const { data: stores, isLoading, error } = useStores({ page: currentPage });
+  const searchQuery = searchParams?.q;
+  const { data: stores, isLoading, error } = useStores({
+    page: currentPage,
+    q: searchQuery
+  });
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);

@@ -1,44 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Package, AlertCircle, ShoppingCart } from "lucide-react";
+import { Package, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/types";
-import { useCart } from "@/contexts/CartContext";
-import { toast } from "@/components/ui/use-toast";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!product.isAvailable) {
-      toast({
-        title: "Producto no disponible",
-        description: "Este producto está agotado",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    addToCart(product, quantity);
-    toast({
-      title: "Agregado al carrito",
-      description: `${quantity} ${quantity === 1 ? 'unidad' : 'unidades'} de ${product.name}`,
-    });
-    setQuantity(1);
-  };
-
   return (
     <Link href={`/products/${product.id}`} className="block group">
       <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col">
@@ -88,17 +60,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </>
               )}
             </div>
-          </div>
-
-          <div className="mt-auto pt-4">
-            <Button
-              className="w-full gap-2"
-              onClick={handleAddToCart}
-              disabled={!product.isAvailable}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Agregar al carrito
-            </Button>
           </div>
         </CardContent>
       </Card>

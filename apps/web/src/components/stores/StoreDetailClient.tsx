@@ -13,8 +13,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useStore } from "@/hooks/useStore";
-import { useStoreProducts } from "@/hooks/useStoreProducts";
+import { useStore } from "@/hooks/stores/useStore";
+import { useStoreProducts } from "@/hooks/stores/useStoreProducts";
 import { ApiError } from "@/lib/api-types";
 
 interface StoreDetailClientProps {

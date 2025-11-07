@@ -13,9 +13,10 @@ export default function StoreSearch() {
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set("query", term);
+      params.set("q", term);
+      params.set("page", "1"); // Reset to page 1 when searching
     } else {
-      params.delete("query");
+      params.delete("q");
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -35,8 +36,8 @@ export default function StoreSearch() {
         <Input
           type="text"
           name="search"
-          placeholder="Buscar tiendas por nombre, ciudad o dirección..."
-          defaultValue={searchParams.get("query")?.toString()}
+          placeholder="Buscar tiendas por nombre..."
+          defaultValue={searchParams.get("q")?.toString()}
           className="pl-10"
         />
       </div>

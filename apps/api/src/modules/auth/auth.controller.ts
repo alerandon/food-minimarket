@@ -1,6 +1,6 @@
 import * as Swagger from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '../users/entities/user.entity';
 import { LoginDto } from './dto';
@@ -12,6 +12,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('local'))
   @Swagger.ApiOperation(LoginDocs.apiOperation)
   @Swagger.ApiResponse(LoginDocs.apiResponseStatus201)
