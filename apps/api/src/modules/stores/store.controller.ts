@@ -110,12 +110,7 @@ export class StoresController {
   async delete(@Param('id') id: string) {
     try {
       const deletedStore = await this.storesService.delete(id);
-      const response = {
-        data: {
-          message: 'Store deleted successfully',
-          store: deletedStore,
-        },
-      };
+      const response = { data: deletedStore};
       return response;
     } catch (error) {
       checkIfEntityNotFound({ error, id, entityName: 'Store' });
@@ -226,12 +221,7 @@ export class StoresController {
         id,
         productId,
       );
-      const response = {
-        data: {
-          message: 'Product removed from store successfully',
-          product: deletedProduct,
-        },
-      };
+      const response = { data: deletedProduct };
       return response;
     } catch (error) {
       checkIfEntityNotFound({ error, id, entityName: 'Store' });

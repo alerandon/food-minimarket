@@ -87,8 +87,10 @@ export class StoresService {
   }
 
   async delete(id: string): Promise<Store> {
-    const store = await this.storeRepository.findOneOrFail({ where: { id } });
-    await this.storeRepository.softDelete(store);
+    const store = await this.storeRepository.findOneOrFail({
+      where: { id },
+    });
+    await this.storeRepository.softDelete(id);
     return store;
   }
 
@@ -162,7 +164,7 @@ export class StoresService {
     const productToDelete = await this.productRepository.findOneOrFail({
       where: { id: productId, store: { id: storeId } },
     });
-    await this.productRepository.delete({ id: productToDelete.id });
+    await this.productRepository.delete(productToDelete.id);
     return productToDelete;
   }
 }

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useProduct } from "@/hooks/useProduct";
+import { useProduct } from "@/hooks/products/useProduct";
 import { useStore } from "@/hooks/stores/useStore";
 import { ApiError } from "@/lib/api-types";
 

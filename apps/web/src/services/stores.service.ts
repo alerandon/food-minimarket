@@ -59,7 +59,10 @@ export const storesService = {
     return response.data;
   },
 
-  async deleteStore(id: string): Promise<void> {
-    await ApiService.delete(`/api/stores/${id}`);
+  async deleteStore(id: string): Promise<{ message: string }> {
+    const response = await ApiService.delete<ApiResponse<{ message: string; store: StoreResponse }>>(
+      `/api/stores/${id}`
+    );
+    return response.data;
   },
 };
