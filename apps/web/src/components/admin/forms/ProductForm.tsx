@@ -97,9 +97,16 @@ export function ProductForm({
                   <Input
                     type="number"
                     step="0.01"
+                    min="0"
                     placeholder="0.00"
                     {...field}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = value === "" ? 0 : parseFloat(value);
+                      const isNaNOrNegative = isNaN(numValue) || numValue < 0;
+                      field.onChange(isNaNOrNegative ? 0 : numValue);
+                    }}
                     disabled={isLoading}
                   />
                 </FormControl>
@@ -144,9 +151,15 @@ export function ProductForm({
                 <FormControl>
                   <Input
                     type="number"
+                    min="0"
                     placeholder="0"
                     {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = value === "" ? 0 : parseInt(value);
+                      field.onChange(isNaN(numValue) || numValue < 0 ? 0 : numValue);
+                    }}
                     disabled={isLoading}
                   />
                 </FormControl>

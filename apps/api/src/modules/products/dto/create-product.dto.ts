@@ -29,7 +29,6 @@ export class CreateProductDto {
     format: 'string',
   })
   @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })

@@ -12,9 +12,8 @@ export const authService = {
       credentials
     );
 
-    // Guardar el token automáticamente
-    if (response.data.access_token) {
-      ApiService.setAuthToken(response.data.access_token);
+    if (response.data.token) {
+      ApiService.setAuthToken(response.data.token);
     }
 
     return response.data;

@@ -5,26 +5,22 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 export class ApiService {
   private static getAuthToken(): string | null {
     if (typeof window === "undefined") return null;
-    return localStorage.getItem("auth_token");
+    return localStorage.getItem("token");
   }
 
   static setAuthToken(token: string): void {
     if (typeof window !== "undefined") {
-      localStorage.setItem("auth_token", token);
+      localStorage.setItem("token", token);
     }
   }
 
   static removeAuthToken(): void {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("auth_token");
+      localStorage.removeItem("token");
     }
   }
 
   private static async handleResponse<T>(response: Response): Promise<T> {
-    console.log("Response status:", response.status);
-    console.log("Response ok:", response.ok);
-    console.log("Response URL:", response.url);
-
     if (!response.ok) {
       let errorData: ApiError;
       try {
@@ -37,7 +33,6 @@ export class ApiService {
         };
       }
 
-      // Log del error para debugging
       console.error("API Error:", {
         url: response.url,
         status: response.status,
@@ -49,7 +44,6 @@ export class ApiService {
     }
 
     const jsonData = await response.json();
-    console.log("JSON parseado:", jsonData);
     return jsonData;
   }
 

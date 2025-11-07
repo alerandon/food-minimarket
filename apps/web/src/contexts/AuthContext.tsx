@@ -23,19 +23,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const token = localStorage.getItem("auth_token");
+        const token = localStorage.getItem("token");
         const savedUser = localStorage.getItem("auth_user");
 
         if (token && savedUser) {
           const userData = JSON.parse(savedUser) as User;
           setUser(userData);
-          // Asegurar que el token esté configurado en ApiService
           ApiService.setAuthToken(token);
         }
       } catch (error) {
-        console.error("Error loading user from localStorage:", error);
-        // Si hay error, limpiar datos corruptos
-        localStorage.removeItem("auth_token");
+        console.error("❌ Error loading user from localStorage:", error);
+        localStorage.removeItem("token");
         localStorage.removeItem("auth_user");
       } finally {
         setIsLoading(false);
@@ -48,14 +46,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (userData: User, token: string) => {
     setUser(userData);
     localStorage.setItem("auth_user", JSON.stringify(userData));
-    localStorage.setItem("auth_token", token);
+    localStorage.setItem("token", token);
     ApiService.setAuthToken(token);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("auth_user");
-    localStorage.removeItem("auth_token");
+    localStorage.removeItem("token");
     ApiService.removeAuthToken();
   };
 

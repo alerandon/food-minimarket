@@ -16,7 +16,7 @@ export const productsService = {
 
   async createProduct(data: CreateProductDto): Promise<ProductResponse> {
     const response = await ApiService.post<ApiResponse<ProductResponse>>(
-      "/api/products",
+      `/api/stores/${data.storeId}/products`,
       data
     );
     return response.data;
@@ -24,16 +24,16 @@ export const productsService = {
 
   async updateProduct(
     id: string,
-    data: UpdateProductDto
+    data: UpdateProductDto & { storeId: string }
   ): Promise<ProductResponse> {
     const response = await ApiService.put<ApiResponse<ProductResponse>>(
-      `/api/products/${id}`,
+      `/api/stores/${data.storeId}/products/${id}`,
       data
     );
     return response.data;
   },
 
-  async deleteProduct(id: string): Promise<void> {
-    await ApiService.delete(`/api/products/${id}`);
+  async deleteProduct(id: string, storeId: string): Promise<void> {
+    await ApiService.delete(`/api/stores/${storeId}/products/${id}`);
   },
 };

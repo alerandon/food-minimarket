@@ -12,7 +12,6 @@ export function useCreateProduct(storeId: string, onSuccessCallback?: () => void
   return useMutation({
     mutationFn: (data: CreateProductDto) => productsService.createProduct(data),
     onSuccess: (newProduct) => {
-      // Invalidar productos de la tienda
       queryClient.invalidateQueries({ queryKey: ["store-products", storeId] });
 
       toast({
@@ -20,7 +19,6 @@ export function useCreateProduct(storeId: string, onSuccessCallback?: () => void
         description: `El producto "${newProduct.name}" se ha creado correctamente.`,
       });
 
-      // Ejecutar callback si existe (para cerrar modal)
       onSuccessCallback?.();
     },
     onError: (error: ApiError) => {
@@ -39,9 +37,8 @@ export function useUpdateProduct(storeId: string, onSuccessCallback?: () => void
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateProductDto }) =>
-      productsService.updateProduct(id, data),
+      productsService.updateProduct(id, { ...data, storeId }),
     onSuccess: (updatedProduct) => {
-      // Invalidar productos de la tienda y el producto específico
       queryClient.invalidateQueries({ queryKey: ["store-products", storeId] });
       queryClient.invalidateQueries({ queryKey: ["product", updatedProduct.id] });
 
@@ -50,7 +47,6 @@ export function useUpdateProduct(storeId: string, onSuccessCallback?: () => void
         description: `El producto "${updatedProduct.name}" se ha actualizado correctamente.`,
       });
 
-      // Ejecutar callback si existe (para cerrar modal)
       onSuccessCallback?.();
     },
     onError: (error: ApiError) => {
@@ -68,9 +64,8 @@ export function useDeleteProduct(storeId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => productsService.deleteProduct(id),
+    mutationFn: (id: string) => productsService.deleteProduct(id, storeId),
     onSuccess: () => {
-      // Invalidar productos de la tienda
       queryClient.invalidateQueries({ queryKey: ["store-products", storeId] });
 
       toast({
