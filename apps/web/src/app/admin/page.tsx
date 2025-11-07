@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useAuthContext } from "@/hooks/auth/useAuth";
+import { useStores } from "@/hooks/stores/useStores";
+import { useCreateStore, useUpdateStore, useDeleteStore } from "@/hooks/stores/useStoreMutations";
 import Link from "next/link";
-import { Store, Package } from "lucide-react";
+import { Plus, Store as StoreIcon, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,78 +15,161 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
+import { StoreListSkeleton } from "@/components/admin/StoreListSkeleton";
+import {
+  CreateStoreDialog,
+  EditStoreDialog,
+  DeleteStoreDialog,
+} from "@/components/admin/dialogs";
+import { Store } from "@/lib/types";
+import { StoreFormData } from "@/lib/schemas";
 
 export default function AdminPage() {
   const { user } = useAuthContext();
+  const { data, isLoading } = useStores({ page: 1, limit: 100 });
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingStore, setEditingStore] = useState<Store | null>(null);
+  const [deletingStoreId, setDeletingStoreId] = useState<string | null>(null);
+
+  const createStore = useCreateStore(() => setIsCreateOpen(false));
+  const updateStore = useUpdateStore(() => setEditingStore(null));
+  const deleteStore = useDeleteStore();
+
+  const handleCreate = (data: StoreFormData) => {
+    createStore.mutate(data);
+  };
+
+  const handleUpdate = (data: StoreFormData) => {
+    if (editingStore) {
+      updateStore.mutate({ id: editingStore.id, data });
+    }
+  };
+
+  const handleDelete = () => {
+    if (deletingStoreId) {
+      deleteStore.mutate(deletingStoreId);
+      setDeletingStoreId(null);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <AdminBreadcrumbs
+          items={[{ label: "Admin", href: "/admin" }]}
+        />
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Panel de Administración</h1>
+            <p className="text-muted-foreground mt-2">
+              Bienvenido, {user?.email}
+            </p>
+          </div>
+        </div>
+
+        <StoreListSkeleton />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <AdminBreadcrumbs
-        items={[{ label: "Admin", href: "/admin" }]}
+    <>
+      <div className="space-y-6">
+        <AdminBreadcrumbs
+          items={[{ label: "Admin", href: "/admin" }]}
+        />
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Panel de Administración</h1>
+            <p className="text-muted-foreground mt-2">
+              Bienvenido, {user?.email}
+            </p>
+          </div>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nueva Tienda
+          </Button>
+        </div>
+
+        {data?.items.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <StoreIcon className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-lg font-medium">No hay tiendas registradas</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Comienza creando tu primera tienda
+              </p>
+              <Button onClick={() => setIsCreateOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Crear Tienda
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data?.items.map((store) => (
+              <Card key={store.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle>{store.name}</CardTitle>
+                  <CardDescription>{store.city}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 text-sm">
+                    <p className="text-muted-foreground">{store.address}</p>
+                    <p className="text-muted-foreground">{store.phone}</p>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => setEditingStore(store)}
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      Editar
+                    </Button>
+                    <Button asChild variant="secondary" className="flex-1">
+                      <Link href={`/admin/stores/${store.id}/products`}>
+                        Ver Productos
+                      </Link>
+                    </Button>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="w-full mt-2"
+                    onClick={() => setDeletingStoreId(store.id)}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Eliminar
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <CreateStoreDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreate}
+        isLoading={createStore.isPending}
       />
 
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Panel de Administración</h1>
-        <p className="text-muted-foreground mt-2">
-          Bienvenido, {user?.email}
-        </p>
-      </div>
+      <EditStoreDialog
+        store={editingStore}
+        onOpenChange={() => setEditingStore(null)}
+        onSubmit={handleUpdate}
+        isLoading={updateStore.isPending}
+      />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-2xl font-bold">Tiendas</CardTitle>
-            <Store className="h-6 w-6 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <CardDescription className="mb-4">
-              Gestiona todas las tiendas del marketplace
-            </CardDescription>
-            <Button asChild className="w-full">
-              <Link href="/admin/stores">
-                Administrar Tiendas
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-2xl font-bold">Productos</CardTitle>
-            <Package className="h-6 w-6 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <CardDescription className="mb-4">
-              Administra los productos de cada tienda
-            </CardDescription>
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/admin/stores">
-                Ver Tiendas
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Instrucciones</CardTitle>
-          <CardDescription>
-            Cómo usar el panel de administración
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm text-muted-foreground">
-            • Para gestionar tiendas, haz clic en &quot;Administrar Tiendas&quot;
-          </p>
-          <p className="text-sm text-muted-foreground">
-            • Dentro de cada tienda podrás ver y administrar sus productos
-          </p>
-          <p className="text-sm text-muted-foreground">
-            • Puedes volver a la página principal haciendo clic en &quot;Tiendas&quot; en la barra de navegación
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+      <DeleteStoreDialog
+        open={!!deletingStoreId}
+        onOpenChange={() => setDeletingStoreId(null)}
+        onConfirm={handleDelete}
+      />
+    </>
   );
 }

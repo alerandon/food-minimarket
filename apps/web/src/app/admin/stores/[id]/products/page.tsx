@@ -6,7 +6,7 @@ import { useStoreProducts } from "@/hooks/stores/useStoreProducts";
 import { useProduct } from "@/hooks/products/useProduct";
 import { useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/hooks/products/useProductMutations";
 import Link from "next/link";
-import { Plus, Package, Loader2, Trash2, Edit } from "lucide-react";
+import { Plus, Package, Trash2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,27 +15,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
 import { ProductListSkeleton } from "@/components/admin/ProductListSkeleton";
-import { ProductForm } from "@/components/admin/ProductForm";
+import {
+  CreateProductDialog,
+  EditProductDialog,
+  DeleteProductDialog,
+} from "@/components/admin/dialogs";
 import { ProductFormData } from "@/lib/schemas";
 
 export default function StoreProductsPage({
@@ -108,7 +95,7 @@ export default function StoreProductsPage({
             La tienda que buscas no existe o ha sido eliminada.
           </p>
           <Button asChild>
-            <Link href="/admin/stores">Volver a tiendas</Link>
+            <Link href="/admin">Volver a Admin</Link>
           </Button>
         </div>
       </div>
@@ -121,7 +108,6 @@ export default function StoreProductsPage({
         <AdminBreadcrumbs
           items={[
             { label: "Admin", href: "/admin" },
-            { label: "Tiendas", href: "/admin/stores" },
             { label: store.name },
             { label: "Productos" },
           ]}
@@ -138,7 +124,7 @@ export default function StoreProductsPage({
           </div>
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/admin/stores">Volver a tiendas</Link>
+              <Link href="/admin">Volver a Admin</Link>
             </Button>
             <Button onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
@@ -222,64 +208,27 @@ export default function StoreProductsPage({
         )}
       </div>
 
-      {/* Modal para crear producto */}
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Nuevo Producto</DialogTitle>
-            <DialogDescription>
-              Completa los datos para crear un nuevo producto en {store.name}
-            </DialogDescription>
-          </DialogHeader>
-          <ProductForm
-            onSubmit={handleCreate}
-            isLoading={createProduct.isPending}
-          />
-        </DialogContent>
-      </Dialog>
+      <CreateProductDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSubmit={handleCreate}
+        isLoading={createProduct.isPending}
+        storeName={store.name}
+      />
 
-      {/* Modal para editar producto */}
-      <Dialog open={!!editingProductId} onOpenChange={() => setEditingProductId(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Editar Producto</DialogTitle>
-            <DialogDescription>
-              Modifica los datos del producto
-            </DialogDescription>
-          </DialogHeader>
-          {editingProduct && (
-            <ProductForm
-              initialData={editingProduct}
-              onSubmit={handleUpdate}
-              isLoading={updateProduct.isPending}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      <EditProductDialog
+        product={editingProduct || null}
+        onOpenChange={() => setEditingProductId(null)}
+        onSubmit={handleUpdate}
+        isLoading={updateProduct.isPending}
+      />
 
-      {/* AlertDialog para confirmar eliminación */}
-      <AlertDialog open={!!deletingProductId} onOpenChange={() => setDeletingProductId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer. Se eliminará el producto permanentemente.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {deleteProduct.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Eliminar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteProductDialog
+        open={!!deletingProductId}
+        onOpenChange={() => setDeletingProductId(null)}
+        onConfirm={handleDelete}
+        isDeleting={deleteProduct.isPending}
+      />
     </>
   );
 }
