@@ -101,10 +101,9 @@ export class StoresService {
     q,
     inStock,
   }: FindProductsParams): Promise<PaginatedResult<Product>> {
-    const queryBuilder = this.storeRepository
-      .createQueryBuilder('store')
-      .leftJoinAndSelect('store.products', 'product')
-      .where('store.id = :storeId', { storeId });
+    const queryBuilder = this.productRepository
+      .createQueryBuilder('product')
+      .where('product.storeId = :storeId', { storeId });
 
     if (q) {
       applyFuzzySearchAnd(queryBuilder, q, 'product.name');
@@ -114,12 +113,11 @@ export class StoresService {
     }
 
     const skipNumber = (pageNumber - 1) * pageLimit;
-    const [result, totalItems] = await queryBuilder
+    const [products, totalItems] = await queryBuilder
       .skip(skipNumber)
       .take(pageLimit)
       .getManyAndCount();
 
-    const products = result[0]?.products || [];
     const hasPrev = pageNumber > 1;
     const hasNext = skipNumber + products.length < totalItems;
     const response = {

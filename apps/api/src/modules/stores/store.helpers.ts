@@ -60,21 +60,12 @@ export function applyFuzzySearchAnd<T extends ObjectLiteral>(
   );
 
   queryBuilder.addOrderBy(
-    `
-    CASE
-      WHEN unaccent(${columnName}) ILIKE unaccent(:exactMatch) THEN 0
-      ELSE 1
-    END
-  `
+    `CASE WHEN unaccent(${columnName}) ILIKE unaccent(:exactMatch) THEN 0 ELSE 1 END`,
+    'ASC'
   );
 
   queryBuilder.addOrderBy(
-    `
-    GREATEST(
-      similarity(unaccent(${columnName}), unaccent(:search)),
-      word_similarity(unaccent(:search), unaccent(${columnName}))
-    )
-  `,
+    `GREATEST(similarity(unaccent(${columnName}), unaccent(:search)), word_similarity(unaccent(:search), unaccent(${columnName})))`,
     'DESC'
   );
 
