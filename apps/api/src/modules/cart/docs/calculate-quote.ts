@@ -2,6 +2,7 @@ import {
   ApiOperationOptions,
   ApiResponseOptions,
 } from '@nestjs/swagger';
+import { CartQuoteDto } from '../dto/cart-quote.dto';
 
 export const CalculateQuoteDocs = {
   apiOperation: {
@@ -9,6 +10,22 @@ export const CalculateQuoteDocs = {
     description:
       'Receives a list of products with quantities and returns the subtotal of each item and the total amount. Does not persist data in the database.',
   } as ApiOperationOptions,
+
+  apiBody: {
+    type: CartQuoteDto,
+    examples: {
+      example1: {
+        summary: 'Quote with multiple products',
+        value: {
+          items: [
+            { productId: '123e4567-e89b-12d3-a456-426614174000', quantity: 2 },
+            { productId: '223e4567-e89b-12d3-a456-426614174001', quantity: 1 },
+            { productId: '323e4567-e89b-12d3-a456-426614174002', quantity: 3 },
+          ],
+        },
+      },
+    },
+  },
 
   apiResponseStatus200: {
     status: 200,

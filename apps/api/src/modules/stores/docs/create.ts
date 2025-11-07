@@ -1,10 +1,26 @@
 import { ApiOperationOptions, ApiResponseOptions } from '@nestjs/swagger';
+import { CreateStoreDto } from '../dto/create-store.dto';
 
 export const CreateDocs = {
   apiOperation: {
     summary: 'Create store',
     description: 'Creates a new store',
   } as ApiOperationOptions,
+
+  apiBody: {
+    type: CreateStoreDto,
+    examples: {
+      example1: {
+        summary: 'Create a fresh fruits store',
+        value: {
+          name: 'Fresh Fruits Market',
+          address: '123 Main Street, Downtown',
+          city: 'New York',
+          phone: '+1-555-0123',
+        },
+      },
+    },
+  },
 
   apiResponseStatus201: {
     status: 201,

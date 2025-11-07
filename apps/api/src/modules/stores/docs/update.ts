@@ -3,12 +3,33 @@ import {
   ApiParamOptions,
   ApiResponseOptions,
 } from '@nestjs/swagger';
+import { UpdateStoreDto } from '../dto/update-store.dto';
 
 export const UpdateDocs = {
   apiOperation: {
     summary: 'Update store',
     description: 'Updates an existing store',
   } as ApiOperationOptions,
+
+  apiBody: {
+    type: UpdateStoreDto,
+    examples: {
+      example1: {
+        summary: 'Update store name and phone',
+        value: {
+          name: 'Updated Fresh Fruits Market',
+          phone: '+1-555-9999',
+        },
+      },
+      example2: {
+        summary: 'Update store address',
+        value: {
+          address: '456 New Avenue, Uptown',
+          city: 'Los Angeles',
+        },
+      },
+    },
+  },
 
   apiParam: {
     name: 'id',

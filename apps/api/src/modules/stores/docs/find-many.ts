@@ -2,6 +2,31 @@ import { ApiOperationOptions, ApiResponseOptions } from '@nestjs/swagger';
 
 export const FindManyDocs = {
   apiOperation: { summary: 'Get all stores' } as ApiOperationOptions,
+
+  apiQueries: [
+    {
+      name: 'page',
+      required: false,
+      type: Number,
+      description: 'Page number for pagination (optional)',
+      example: 1,
+    },
+    {
+      name: 'limit',
+      required: false,
+      type: Number,
+      description: 'Number of items per page (optional)',
+      example: 10,
+    },
+    {
+      name: 'q',
+      required: false,
+      type: String,
+      description: 'Search text to filter stores by name (optional)',
+      example: 'fruits',
+    },
+  ],
+
   apiResponseStatus200: {
     status: 200,
     description: 'All stores retrieved successfully.',

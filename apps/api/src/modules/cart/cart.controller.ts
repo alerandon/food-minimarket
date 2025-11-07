@@ -16,6 +16,7 @@ export class CartController {
   @UseGuards(AuthGuard('auth-jwt'))
   @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(CalculateQuoteDocs.apiOperation)
+  @Swagger.ApiBody(CalculateQuoteDocs.apiBody)
   @Swagger.ApiResponse(CalculateQuoteDocs.apiResponseStatus200)
   @Swagger.ApiResponse(CalculateQuoteDocs.apiResponseStatus400)
   @Swagger.ApiResponse(CalculateQuoteDocs.apiResponseStatus404)

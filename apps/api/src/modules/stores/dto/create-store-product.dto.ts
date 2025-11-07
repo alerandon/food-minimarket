@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
+import { OmitType } from '@nestjs/swagger';
 import { CreateProductDto } from '../../products/dto/create-product.dto';
 
 export class CreateStoreProductDto extends OmitType(CreateProductDto, [

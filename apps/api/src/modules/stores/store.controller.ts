@@ -34,9 +34,9 @@ export class StoresController {
   @Get()
   @Swagger.ApiOperation(FindManyDocs.apiOperation)
   @Swagger.ApiResponse(FindManyDocs.apiResponseStatus200)
-  @Swagger.ApiQuery({ name: 'page', required: false, type: Number, description: 'Page response (optional)' })
-  @Swagger.ApiQuery({ name: 'limit', required: false, type: Number, description: 'Limit per page (optional)' })
-  @Swagger.ApiQuery({ name: 'q', required: false, type: String, description: 'Search text by name (optional)' })
+  @Swagger.ApiQuery(FindManyDocs.apiQueries[0])
+  @Swagger.ApiQuery(FindManyDocs.apiQueries[1])
+  @Swagger.ApiQuery(FindManyDocs.apiQueries[2])
   async findMany(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -74,6 +74,7 @@ export class StoresController {
   @UseGuards(AuthGuard('auth-jwt'))
   @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(CreateDocs.apiOperation)
+  @Swagger.ApiBody(CreateDocs.apiBody)
   @Swagger.ApiResponse(CreateDocs.apiResponseStatus201)
   @Swagger.ApiResponse(CreateDocs.apiResponseStatus400)
   async create(@Body() body: CreateStoreDto) {
@@ -87,6 +88,7 @@ export class StoresController {
   @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(UpdateDocs.apiOperation)
   @Swagger.ApiParam(UpdateDocs.apiParam)
+  @Swagger.ApiBody(UpdateDocs.apiBody)
   @Swagger.ApiResponse(UpdateDocs.apiResponseStatus200)
   @Swagger.ApiResponse(UpdateDocs.apiResponseStatus404)
   async update(@Param('id') id: string, @Body() body: UpdateStoreDto) {
@@ -121,10 +123,10 @@ export class StoresController {
   @Get(':id/products')
   @Swagger.ApiOperation(StoreProductsDocs.findProducts.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.findProducts.apiParam)
-  @Swagger.ApiQuery({ name: 'page', required: false, type: Number, description: 'Page response (optional)' })
-  @Swagger.ApiQuery({ name: 'limit', required: false, type: Number, description: 'Limit per page (optional)' })
-  @Swagger.ApiQuery({ name: 'q', required: false, type: String, description: 'Search text by name (optional)' })
-  @Swagger.ApiQuery({ name: 'inStock', required: false, type: Boolean, description: 'Filter by stock status (optional)' })
+  @Swagger.ApiQuery(StoreProductsDocs.findProducts.apiQueries[0])
+  @Swagger.ApiQuery(StoreProductsDocs.findProducts.apiQueries[1])
+  @Swagger.ApiQuery(StoreProductsDocs.findProducts.apiQueries[2])
+  @Swagger.ApiQuery(StoreProductsDocs.findProducts.apiQueries[3])
   @Swagger.ApiResponse(StoreProductsDocs.findProducts.apiResponseStatus200)
   @Swagger.ApiResponse(StoreProductsDocs.findProducts.apiResponseStatus404)
   async findProducts(
@@ -158,6 +160,7 @@ export class StoresController {
   @Swagger.ApiBearerAuth()
   @Swagger.ApiOperation(StoreProductsDocs.createProduct.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.createProduct.apiParam)
+  @Swagger.ApiBody(StoreProductsDocs.createProduct.apiBody)
   @Swagger.ApiResponse(StoreProductsDocs.createProduct.apiResponseStatus201)
   @Swagger.ApiResponse(StoreProductsDocs.createProduct.apiResponseStatus404)
   async createProduct(
@@ -183,6 +186,7 @@ export class StoresController {
   @Swagger.ApiOperation(StoreProductsDocs.updateProduct.apiOperation)
   @Swagger.ApiParam(StoreProductsDocs.updateProduct.apiParams[0])
   @Swagger.ApiParam(StoreProductsDocs.updateProduct.apiParams[1])
+  @Swagger.ApiBody(StoreProductsDocs.updateProduct.apiBody)
   @Swagger.ApiResponse(StoreProductsDocs.updateProduct.apiResponseStatus200)
   @Swagger.ApiResponse(StoreProductsDocs.updateProduct.apiResponseStatus404)
   async updateProduct(

@@ -1,4 +1,6 @@
 import { ApiOperationOptions, ApiResponseOptions } from '@nestjs/swagger';
+import { CreateStoreProductDto } from '../dto/create-store-product.dto';
+import { UpdateStoreProductDto } from '../dto/update-store-product.dto';
 
 export const StoreProductsDocs = {
   findProducts: {
@@ -13,6 +15,37 @@ export const StoreProductsDocs = {
       type: String,
       required: true,
     },
+
+    apiQueries: [
+      {
+        name: 'page',
+        required: false,
+        type: Number,
+        description: 'Page number for pagination (optional)',
+        example: 1,
+      },
+      {
+        name: 'limit',
+        required: false,
+        type: Number,
+        description: 'Number of items per page (optional)',
+        example: 10,
+      },
+      {
+        name: 'q',
+        required: false,
+        type: String,
+        description: 'Search text to filter products by name (optional)',
+        example: 'orange',
+      },
+      {
+        name: 'inStock',
+        required: false,
+        type: Boolean,
+        description: 'Filter products by stock availability (optional)',
+        example: true,
+      },
+    ],
 
     apiResponseStatus200: {
       status: 200,
@@ -36,6 +69,22 @@ export const StoreProductsDocs = {
       description: 'Store ID',
       type: String,
       required: true,
+    },
+
+    apiBody: {
+      type: CreateStoreProductDto,
+      examples: {
+        example1: {
+          summary: 'Create an orange juice product',
+          value: {
+            name: 'Orange Juice 500ml',
+            description: 'Fresh squeezed orange juice',
+            price: 3.99,
+            sku: 'JUICE-ORA-500',
+            stock: 50,
+          },
+        },
+      },
     },
 
     apiResponseStatus201: {
@@ -69,6 +118,25 @@ export const StoreProductsDocs = {
         required: true,
       },
     ],
+
+    apiBody: {
+      type: UpdateStoreProductDto,
+      examples: {
+        example1: {
+          summary: 'Update product price and stock',
+          value: {
+            price: 4.49,
+            stock: 75,
+          },
+        },
+        example2: {
+          summary: 'Update product availability',
+          value: {
+            isAvailable: false,
+          },
+        },
+      },
+    },
 
     apiResponseStatus200: {
       status: 200,

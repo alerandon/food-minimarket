@@ -31,21 +31,43 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
+  @ApiProperty({
+    description: 'Product price',
+    example: 12.99,
+    type: Number,
+    minimum: 0.01,
+  })
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   @Type(() => Number)
   price: number;
 
+  @ApiProperty({
+    description: 'Product SKU (Stock Keeping Unit)',
+    example: 'PROD-12345',
+    maxLength: 50,
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)
   sku: string;
 
+  @ApiProperty({
+    description: 'Product stock quantity',
+    example: 100,
+    type: Number,
+    minimum: 0,
+  })
   @IsInt()
   @Min(0)
   @Type(() => Number)
   stock: number;
 
+  @ApiProperty({
+    description: 'Store ID (optional for global products)',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
   @IsUUID()
   @IsOptional()
   storeId: string;
