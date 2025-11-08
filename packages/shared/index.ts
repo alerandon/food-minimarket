@@ -15,5 +15,5 @@ export interface PaginatedResult<T> {
 // CONSTANTS
 // ============================================
 
-export const PAGINATE_DEFAULT_LIMIT = 20;
-export const MAX_PASSWORD_LENGTH = 128;
+export const PAGINATE_DEFAULT_LIMIT: number = 20;
+export const MAX_PASSWORD_LENGTH: number = 128;
