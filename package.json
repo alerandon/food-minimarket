@@ -13,7 +13,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "api:migrate": "npm run migration:run --workspace=api",
-    "api:seed": "npm run seed --workspace=api",
+    "api:seed": "npm run seed --workspace=api"
   },
   "repository": {
     "type": "git",
