@@ -92,6 +92,24 @@ docker compose exec api npm run seed
 - **Web Application**: [https://the-marketplace-web.onrender.com/](https://the-marketplace-web.onrender.com/)
 - **API Documentation (Swagger)**: [https://the-marketplace-api.onrender.com/api/docs](https://the-marketplace-api.onrender.com/api/docs)
 
+## 🚢 Deployment
+
+El proyecto está desplegado en **Render**, utilizando sus servicios para:
+
+- **Base de Datos**: PostgreSQL managed database
+- **API Backend**: Web Service conectado al repositorio
+- **Aplicación Web**: Web Service conectado al repositorio
+
+### Deploy Automático
+
+Cada vez que se realiza un commit en la rama `main` del repositorio, Render detecta automáticamente los cambios y ejecuta un despliegue automático de los servicios afectados. Este proceso incluye:
+
+1. **Build**: Construcción del código usando el entorno Node.js de Render
+2. **Deploy**: Despliegue de la nueva versión
+3. **Health Check**: Verificación de que el servicio esté funcionando correctamente
+
+No se requiere ninguna acción manual para desplegar cambios en producción, simplemente realiza push a la rama principal.
+
 ## 📦 Estructura del Proyecto
 
 ```
